@@ -1,9 +1,13 @@
-# BrainF*ck Interpreter
+# brainf*ck Interpreter
 
-**I started to make this BF interpreter in Rust because I felt kinda bored. Right now, it lacks many safety features other interpreters may have.**
+This is a f*ckingly easy-to-use brainf*ck interpreter, just pass your code as 
+an argument of the executable: 
+```shell
+brainf_intp [,.]
+```
 
-You can feel free to bring changes to this repo.
-
-## 🛣️ Roadmap
-- [ ] Add safety features on adds and subs to avoid any overflow/outbound related issue.
-- [ ] Add a compilation feature by converting a BF file into a set of Assembly instructions.
+To install or test the interpreter, either build it from the source using Cargo
+or install it using cargo:
+```
+cargo install brainf_intp
+```
