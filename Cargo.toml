@@ -6,7 +6,7 @@ keywords = ["brainfuck", "bf", "interpreter"]
 categories = ["command-line-utilities", "brainfuck"]
 authors = ["Johan Montorfano <me@johanmontorfano.com>"]
 description = "Brainfuck interpreter implemented in Rust"
-license = "GNU"
+license = "GPL-3.0-only"
 
 [dependencies]
 
