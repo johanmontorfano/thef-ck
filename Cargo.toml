@@ -2,5 +2,9 @@
 name = "brainf_intp"
 version = "0.1.0"
 edition = "2021"
+keywords = ["brainfuck", "bf", "interpreter"]
+categories = ["command-line-utilities", "brainfuck"]
+authors = ["Johan Montorfano <me@johanmontorfano.com>"]
 
 [dependencies]
+
