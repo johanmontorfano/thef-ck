@@ -7,26 +7,17 @@ use std::{env, io::{stdin, stdout, Write}};
 /// - single pointer to memory.
 pub fn interpret(code: String) {
     let instructions = code.chars().collect::<Vec<char>>();
-    let mut instructions_ptr_stack = vec![0_usize];
-
+    let mut instruction_ptr = 0;
     let mut memory = [0_u8; 30000];
     let mut memory_ptr = 0_usize;
-    let mut memory_ptr_stack = vec![0_usize];
+    let mut loop_stack = vec![];
 
     // The memory pointer stack only contains the position of the pointer when
     // a loop began. It differs from the instructions pointer stack that states
     // of the position of each loop in the iteration process.
 
-    while instructions_ptr_stack.get(0).unwrap() < &instructions.len() {
-        let instruction = instructions
-            .get(*instructions_ptr_stack.last().unwrap())
-            .unwrap();
-
-        if let Some(last_ptr) = instructions_ptr_stack.last_mut() {
-            *last_ptr += 1;
-        }
-
-        match instruction {
+    while instruction_ptr < instructions.len() {
+        match instructions[instruction_ptr] {
             '>' => {
                 assert_ne!(memory_ptr, 30000, "Pointing out of memory");
                 memory_ptr += 1;
@@ -65,27 +56,32 @@ pub fn interpret(code: String) {
                 memory[memory_ptr] = input[0] as u8;
             }
             '[' => {
-                instructions_ptr_stack.push(
-                    *instructions_ptr_stack.get(instructions_ptr_stack.len() - 1)
-                    .unwrap());
-                memory_ptr_stack.push(memory_ptr);
+                if memory[memory_ptr] == 0 {
+                    let mut open_brackets = 1;
+
+                    while open_brackets > 0 {
+                        instruction_ptr += 1;
+                        match instructions[instruction_ptr] {
+                            '[' => open_brackets += 1,
+                            ']' => open_brackets -= 1,
+                            _ => ()
+                        }
+                    }
+                } else {
+                    loop_stack.push(instruction_ptr);
+                }
             }
             ']' => {
-                if memory[*memory_ptr_stack.last().unwrap()] == 0 {
-                    let ptr_pos = instructions_ptr_stack.len() - 2;
-
-                    *instructions_ptr_stack.get_mut(ptr_pos).unwrap() = 
-                        instructions_ptr_stack.pop().unwrap(); 
-                    memory_ptr_stack.pop();
+                if memory[memory_ptr] != 0 {
+                    instruction_ptr = *loop_stack.last().unwrap();
                 } else {
-                    *instructions_ptr_stack.last_mut().unwrap() = 
-                        *instructions_ptr_stack
-                            .get(instructions_ptr_stack.len() - 2)
-                            .unwrap();
+                    loop_stack.pop();
                 }
             }
             _ => ()
         }
+
+        instruction_ptr += 1;
     }
 }
 
